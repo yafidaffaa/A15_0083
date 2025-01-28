@@ -43,7 +43,125 @@ import com.yafidaffaaa.uas_pam.ui.navigation.DestinasiDetailPetugas
 import com.yafidaffaaa.uas_pam.ui.viewmodel.PenyediaViewModel
 import com.yafidaffaaa.uas_pam.ui.viewmodel.petugas.DetailViewModelPetugas
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DetailScreenPetugas(
+    ID: String,
+    onEditClick: (String) -> Unit = { },
+    onDeleteClick: (String) -> Unit = { },
+    onBackClick: () -> Unit = { },
+    modifier: Modifier = Modifier,
+    viewModel: DetailViewModelPetugas = viewModel(factory = PenyediaViewModel.Factory)
+) {
+    val petugas = viewModel.uiState.detailUiEvent
 
+    LaunchedEffect(ID) {
+        viewModel.DetailPetugas(ID)
+    }
+
+    val isLoading = viewModel.uiState.isLoading
+    val isError = viewModel.uiState.isError
+    val errorMessage = viewModel.uiState.errorMessage
+
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text(DestinasiDetailPetugas.titleRes) },
+                navigationIcon = {
+                    IconButton(onClick = { onBackClick() }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors()
+            )
+        },
+        content = { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                if (isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                } else if (isError) {
+                    Text(
+                        text = errorMessage,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                } else if (viewModel.uiState.isUiEventNotEmpty) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        val backgroundColor = when (petugas.jabatan) {
+                            "Keeper" -> colorResource(id = R.color.karnivora_red)
+                            "Dokter Hewan" -> colorResource(id = R.color.herbivora_green)
+                            "Kurator" -> colorResource(id = R.color.omnivora_blue)
+                            else -> MaterialTheme.colorScheme.surface
+                        }
+
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            elevation = CardDefaults.cardElevation(8.dp),
+                            colors = CardDefaults.cardColors(containerColor = backgroundColor)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                DetailRow(label = "ID Petugas", value = petugas.id_petugas)
+                                DetailRow(label = "Nama", value = petugas.nama_petugas)
+                                DetailRow(label = "Jabatan", value = petugas.jabatan)
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    IconButton(onClick = { onEditClick(petugas.id_petugas) }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Edit,
+                                            contentDescription = "Edit Data",
+                                            tint = Color.White
+                                        )
+                                    }
+                                    IconButton(onClick = { showDeleteDialog = true }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Delete,
+                                            contentDescription = "Delete Data",
+                                            tint = Color.White
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    )
+    if (showDeleteDialog) {
+        DeleteConfirmationDialog(
+            onDeleteConfirm = {
+                viewModel.deletePetugasByID(petugas.id_petugas)
+                showDeleteDialog = false
+                onDeleteClick(petugas.id_petugas)
+            },
+            onDeleteCancel = {
+                showDeleteDialog = false
+            }
+        )
+    }
+}
 
 @Composable
 fun DetailRow(label: String, value: String) {
