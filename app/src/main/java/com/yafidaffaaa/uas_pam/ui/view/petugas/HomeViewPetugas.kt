@@ -51,7 +51,79 @@ import com.yafidaffaaa.uas_pam.ui.viewmodel.PenyediaViewModel
 import com.yafidaffaaa.uas_pam.ui.viewmodel.petugas.HomeUiState
 import com.yafidaffaaa.uas_pam.ui.viewmodel.petugas.HomeViewModelPetugas
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreenPetugas(
+    navigateToInsertPetugas: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDetailClick: (String) -> Unit = {},
+    navController: NavController,
+    viewModel: HomeViewModelPetugas = viewModel(factory = PenyediaViewModel.Factory)
+) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val searchQuery = remember { mutableStateOf("") }
 
+    LaunchedEffect(Unit) {
+        viewModel.getPetugas()
+    }
+
+    Scaffold(
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            TopAppBar(
+                title = DestinasiHomePetugas.titleRes,
+                canNavigateBack = true,
+                scrollBehavior = scrollBehavior,
+                navigateUp = {
+                    navController.popBackStack()
+                },
+                showRefresh = false,
+                onRefresh = {
+                    viewModel.getPetugas()
+                }
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = navigateToInsertPetugas,
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.padding(18.dp),
+                containerColor = Color.Black,
+            ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Officer", tint = Color.White)
+            }
+        }
+    ) { innerPadding ->
+        Column (
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            OutlinedTextField(
+                value = searchQuery.value,
+                onValueChange = { query ->
+                    searchQuery.value = query
+                    if (query.isEmpty()) {
+                        viewModel.getPetugas()
+                    } else {
+                        viewModel.searchPetugas(query)
+                    }
+                },
+                label = { Text("Search Petugas") },
+                modifier = Modifier.fillMaxWidth().padding(top = 0.dp, start = 16.dp, end = 16.dp)
+            )
+
+            HomeStatus(
+                homeUiState = viewModel.ptgUIState,
+                retryAction = { viewModel.getPetugas() },
+                modifier = Modifier.padding(top = 10.dp),
+                onDetailClick = onDetailClick,
+                onDeleteClick = {
+                    viewModel.getPetugas()
+                }
+            )
+        }
+    }
+}
 
 @Composable
 fun HomeStatus(
