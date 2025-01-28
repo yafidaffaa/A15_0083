@@ -10,7 +10,25 @@ import com.yafidaffaaa.uas_pam.model.Hewan
 import com.yafidaffaaa.uas_pam.repository.HewanRepository
 import kotlinx.coroutines.launch
 
+class InsertViewModelHewan(private val hwn: HewanRepository) : ViewModel() {
+    var uiState by mutableStateOf(InsertUiState())
+        private set
 
+    fun updateInsertHwnState(insertUiEvent: InsertUiEvent) {
+        uiState = InsertUiState(insertUiEvent = insertUiEvent)
+    }
+
+    suspend fun insertHwn() {
+        viewModelScope.launch {
+            try {
+                hwn.insertHewan(uiState.insertUiEvent.toHwn())
+                Log.d("InsertViewModel", "Data successfully inserted: ${uiState.insertUiEvent}")
+            } catch (e: Exception) {
+                Log.e("InsertViewModel", "Error inserting data: ${e.message}", e)
+            }
+        }
+    }
+}
 
 fun InsertUiEvent.toHwn(): Hewan = Hewan(
     id_hewan = id_hewan.toIntOrNull()?: 0,
