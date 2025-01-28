@@ -12,6 +12,14 @@ import kotlinx.coroutines.launch
 
 
 
+fun Hewan.toInsertUiEvent(): InsertUiEvent = InsertUiEvent(
+    id_hewan = id_hewan.toString(),
+    nama_hewan = nama_hewan,
+    populasi = populasi.toString(),
+    tipe_pakan = tipe_pakan,
+    zona_wilayah = zona_wilayah,
+)
+
 data class InsertUiState(
     val insertUiEvent: InsertUiEvent = InsertUiEvent()
 )
