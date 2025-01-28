@@ -14,7 +14,7 @@ import androidx.navigation.navArgument
 import com.yafidaffaaa.uas_pam.ui.view.HomeMonitoringView
 import com.yafidaffaaa.uas_pam.ui.view.hewan.DetailScreen
 import com.yafidaffaaa.uas_pam.ui.view.hewan.HomeScreen
-import com.yafidaffaaa.uas_pam.ui.view.hewan.HomeScreenKandang
+import com.yafidaffaaa.uas_pam.ui.view.kandang.HomeScreenKandang
 import com.yafidaffaaa.uas_pam.ui.view.hewan.InsertHwnScreen
 import com.yafidaffaaa.uas_pam.ui.view.hewan.UpdateScreenHewan
 import com.yafidaffaaa.uas_pam.ui.view.kandang.DetailScreenKandang
