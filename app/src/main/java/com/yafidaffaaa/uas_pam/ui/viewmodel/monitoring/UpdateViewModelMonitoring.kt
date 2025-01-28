@@ -24,9 +24,7 @@ import retrofit2.HttpException
 
 class UpdateViewModelMonitoring(
     savedStateHandle: SavedStateHandle,
-    private val monitoringRepository: MonitoringRepository,
-    private val kandangRepo: KandangRepository,
-    private val petugasRepo: PetugasRepository
+    private val monitoringRepository: MonitoringRepository
 ) : ViewModel() {
 
     var updateUiState by mutableStateOf(InsertUiStateMonitoring())
@@ -77,7 +75,7 @@ class UpdateViewModelMonitoring(
     private fun fetchPetugasList() {
         viewModelScope.launch {
             try {
-                val response = petugasRepo.getPetugas()
+                val response = monitoringRepository.getNamaPetugasDokter()
                 _petugasList.value = response
             } catch (e: Exception) {
                 Log.e("UpdateViewModelMonitoring", "Error fetching petugas list: ${e.message}", e)

@@ -89,9 +89,7 @@ object PenyediaViewModel {
         initializer {
             UpdateViewModelMonitoring(
                 this.createSavedStateHandle(),
-                MonitoringApplication().container.monitoringRepository,
-                MonitoringApplication().container.kandangRepository,
-                MonitoringApplication().container.petugasRepository
+                MonitoringApplication().container.monitoringRepository
             )
         }
     }
