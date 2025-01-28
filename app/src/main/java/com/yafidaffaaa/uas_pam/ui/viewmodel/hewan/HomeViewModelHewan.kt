@@ -44,5 +44,21 @@ class HomeViewModelHewan(private val hwn: HewanRepository) : ViewModel() {
         }
     }
 
+    fun searchHewan(query: String) {
+        hwnUIState = HomeUiState.Loading
+        viewModelScope.launch {
+            try {
+                val result = hwn.searchHewan(query)
 
+                if (result.isNotEmpty()) {
+                    hwnUIState = HomeUiState.Success(result)
+                } else {
+                    hwnUIState = HomeUiState.Error("No matching animals found")
+                }
+            } catch (e: Exception) {
+                Log.e("HewanViewModel", "Error searching animal: ${e.message}", e)
+                hwnUIState = HomeUiState.Error("An error occurred: ${e.message}")
+            }
+        }
+    }
 }
