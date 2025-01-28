@@ -39,6 +39,22 @@ object PenyediaViewModel {
                 MonitoringApplication().container.hewanRepository
             )
         }
+        initializer {
+            HomeViewModelPetugas(MonitoringApplication().container.petugasRepository)
+        }
+        initializer {
+            InsertViewModelPetugas(MonitoringApplication().container.petugasRepository)
+        }
+        initializer {
+            DetailViewModelPetugas(MonitoringApplication().container.petugasRepository)
+        }
+        initializer {
+            UpdateViewModelPetugas(
+                this.createSavedStateHandle(),
+                MonitoringApplication().container.petugasRepository
+            )
+        }
+
 
     }
 }
