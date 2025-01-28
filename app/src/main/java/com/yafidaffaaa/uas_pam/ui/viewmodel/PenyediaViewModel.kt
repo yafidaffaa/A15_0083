@@ -75,7 +75,25 @@ object PenyediaViewModel {
             )
         }
 
-
+        initializer {
+            HomeViewModelMonitoring(MonitoringApplication().container.monitoringRepository)
+        }
+        initializer {
+            InsertViewModelMonitoring(
+                MonitoringApplication().container.monitoringRepository,
+            )
+        }
+        initializer {
+            DetailViewModelMonitoring(MonitoringApplication().container.monitoringRepository)
+        }
+        initializer {
+            UpdateViewModelMonitoring(
+                this.createSavedStateHandle(),
+                MonitoringApplication().container.monitoringRepository,
+                MonitoringApplication().container.kandangRepository,
+                MonitoringApplication().container.petugasRepository
+            )
+        }
     }
 }
 
