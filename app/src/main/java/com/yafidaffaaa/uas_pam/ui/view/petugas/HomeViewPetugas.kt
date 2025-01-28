@@ -53,6 +53,39 @@ import com.yafidaffaaa.uas_pam.ui.viewmodel.petugas.HomeViewModelPetugas
 
 
 
+/**
+ * The home screen displaying the loading message.
+ */
+@Composable
+fun OnLoading(modifier: Modifier = Modifier) {
+    Image(
+        modifier = modifier.size(200.dp),
+        painter = painterResource(R.drawable.loading),
+        contentDescription = stringResource(R.string.loading)
+    )
+}
+
+/**
+ * The home screen displaying error message with re-attempt button.
+ */
+
+@Composable
+fun OnError(retryAction: () -> Unit, errorMessage: String, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.error), contentDescription = ""
+        )
+        Text(text = errorMessage, modifier = Modifier.padding(16.dp))
+        Button(onClick = retryAction) {
+            Text(stringResource(R.string.retry))
+        }
+    }
+}
+
 @Composable
 fun PtgLayout(
     petugas: List<Petugas>,
