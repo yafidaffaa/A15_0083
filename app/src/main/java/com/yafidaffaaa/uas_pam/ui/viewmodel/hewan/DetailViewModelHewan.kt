@@ -11,7 +11,41 @@ import kotlinx.coroutines.launch
 import okio.IOException
 import retrofit2.HttpException
 
+class DetailViewModelHewan(private val hwnRepository: HewanRepository) : ViewModel() {
 
+    var uiState by mutableStateOf(DetailUiState())
+        private set
+
+    fun DetailHewan(ID: String) {
+        viewModelScope.launch {
+            uiState = DetailUiState(isLoading = true)
+            try {
+                val hewan =
+                    hwnRepository.getHewanById(ID) // ini membuat berat memory karena ambil data dari variable bukan dari route
+                uiState = DetailUiState(detailUiEvent = hewan!!.toDetailUiEvent())
+            } catch (e: Exception) {
+                e.printStackTrace()
+                uiState = DetailUiState(
+                    isError = true,
+                    errorMessage = "Failed to fetch details: ${e.message}"
+                )
+            }
+        }
+
+    }
+
+    fun deleteHewanByID(id: String) {
+        viewModelScope.launch {
+            try {
+                hwnRepository.deleteHewan(id)
+            } catch (e: IOException) {
+                HomeUiState.Error("Kesalahan jaringan: ${e.message}")
+            } catch (e: HttpException) {
+                HomeUiState.Error("Kesalahan server: ${e.message}")
+            }
+        }
+    }
+}
 
 data class DetailUiState(
     val detailUiEvent: InsertUiEvent = InsertUiEvent(),
