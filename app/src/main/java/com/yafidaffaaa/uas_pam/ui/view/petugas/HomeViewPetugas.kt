@@ -53,6 +53,38 @@ import com.yafidaffaaa.uas_pam.ui.viewmodel.petugas.HomeViewModelPetugas
 
 
 
+@Composable
+fun HomeStatus(
+    homeUiState: HomeUiState,
+    retryAction: () -> Unit,
+    modifier: Modifier = Modifier.padding(top = 8.dp),
+    onDeleteClick: (Petugas) -> Unit = {},
+    onDetailClick: (String) -> Unit
+) {
+
+    when (homeUiState) {
+        is HomeUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
+
+        is HomeUiState.Success ->
+            if (homeUiState.petugas.isEmpty()){
+                return Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = "Tidak ada data Petugas" )
+                }
+            }else {
+                PtgLayout(
+                    petugas = homeUiState.petugas, modifier = modifier.fillMaxWidth(),
+                    onDetailClick = {
+                        onDetailClick(it.id_petugas.toString())
+                    },
+                    onDeleteClick = {
+                        onDeleteClick(it)
+                    }
+                )
+            }
+        is HomeUiState.Error -> OnError(retryAction,errorMessage = homeUiState.message, modifier = modifier.fillMaxSize())
+    }
+}
+
 /**
  * The home screen displaying the loading message.
  */
