@@ -55,6 +55,26 @@ object PenyediaViewModel {
             )
         }
 
+        initializer {
+            HomeViewModelKandang(MonitoringApplication().container.kandangRepository)
+        }
+        initializer {
+            InsertViewModelKandang(
+                MonitoringApplication().container.kandangRepository,
+                MonitoringApplication().container.hewanRepository
+            )
+        }
+        initializer {
+            DetailViewModelKandang(MonitoringApplication().container.kandangRepository)
+        }
+        initializer {
+            UpdateViewModelKandang(
+                this.createSavedStateHandle(),
+                MonitoringApplication().container.kandangRepository,
+                MonitoringApplication().container.hewanRepository
+            )
+        }
+
 
     }
 }
