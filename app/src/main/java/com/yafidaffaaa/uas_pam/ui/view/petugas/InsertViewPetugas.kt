@@ -29,7 +29,44 @@ import com.yafidaffaaa.uas_pam.ui.customwidget.petugas.JabatanRadioButton
 import com.yafidaffaaa.uas_pam.ui.navigation.DestinasiInsertPetugas
 import kotlinx.coroutines.launch
 
-
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun InsertPtgScreen(
+    navigateBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: InsertViewModelPetugas = viewModel(factory = PenyediaViewModel.Factory)
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Scaffold(
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            TopAppBar(
+                title = DestinasiInsertPetugas.titleRes,
+                canNavigateBack = true,
+                scrollBehavior = scrollBehavior,
+                navigateUp = navigateBack,
+                showRefresh = false,
+                onRefresh = {}
+            )
+        }
+    ) { innerPadding ->
+        EntryBody(
+            insertUiState = viewModel.uiState,
+            onSiswaValueChange = viewModel::updateInsertPtgState,
+            onSaveClick = {
+                coroutineScope.launch {
+                    viewModel.insertPtg()
+                    navigateBack()
+                }
+            },
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxWidth()
+        )
+    }
+}
 
 @Composable
 fun EntryBody(
