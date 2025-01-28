@@ -54,6 +54,34 @@ import com.yafidaffaaa.uas_pam.ui.viewmodel.petugas.HomeViewModelPetugas
 
 
 @Composable
+fun PtgLayout(
+    petugas: List<Petugas>,
+    modifier: Modifier = Modifier,
+    onDetailClick: (Petugas) -> Unit,
+    onDeleteClick: (Petugas) -> Unit = {}
+) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(top = 0.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(petugas) { petugas ->
+            PtgCard(
+                petugas = petugas,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                onDeleteClick = {
+                    onDeleteClick(petugas)
+                },
+                onDetailClick = {
+                    onDetailClick(petugas)
+                }
+            )
+        }
+    }
+}
+
+@Composable
 fun PtgCard(
     petugas: Petugas,
     modifier: Modifier = Modifier,
