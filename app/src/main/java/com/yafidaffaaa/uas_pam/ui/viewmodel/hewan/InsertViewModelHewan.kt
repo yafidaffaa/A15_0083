@@ -12,6 +12,10 @@ import kotlinx.coroutines.launch
 
 
 
+fun Hewan.toUiStateHwn():InsertUiState = InsertUiState(
+    insertUiEvent = this.toInsertUiEvent()
+)
+
 fun Hewan.toInsertUiEvent(): InsertUiEvent = InsertUiEvent(
     id_hewan = id_hewan.toString(),
     nama_hewan = nama_hewan,
