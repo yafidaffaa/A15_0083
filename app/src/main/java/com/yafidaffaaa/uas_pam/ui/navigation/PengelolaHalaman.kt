@@ -219,7 +219,7 @@ fun PengelolaHalaman(navController: NavHostController = rememberNavController())
                 }
             )
         ) {
-            val idKandang = it.arguments?.getString(DestinasiDetailPetugas.ID)
+            val idKandang = it.arguments?.getString(DestinasiDetailKandang.ID)
             idKandang?.let { idKandang ->
                 DetailScreenKandang(
                     onBackClick = {
